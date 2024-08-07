@@ -33,7 +33,7 @@
                 { emoji: '☁️', size: 40, speed: 0.1, positions: [] },
                 { emoji: '🏛️', size: 50, speed: 0.5, positions: [] },
                 { emoji: '🌳', size: 40, speed: 1, positions: [] },
-                { emoji: '🏗️', size: 30, speed: 1.5, positions: [] }
+                { emoji: '🚧', size: 30, speed: 1.5, positions: [] }
             ],
             landscapes: ['🗼', '🌵', '🏭', '🏗️', '🏢', '🏔️'],
             currentLandscape: 0,
@@ -180,10 +180,10 @@
                 if (isFlying) {
                     const maxHeight = canvas.height - 100 - player.height * 2;
                     this.y = Math.random() * maxHeight + 100;
-                    this.emoji = ['🛸', '🦅', '🚁'][Math.floor(Math.random() * 3)];
+                    this.emoji = ['🛸', '🪂', '🚁'][Math.floor(Math.random() * 3)];
                 } else {
-                    this.y = canvas.height - 0 - this.height; // Same level as the player
-                    this.emoji = ['🚗', '🚙', '🚕'][Math.floor(Math.random() * 3)];
+                    this.y = canvas.height - -5 - this.height; // Same level as the player
+                    this.emoji = ['🚗', '🚙', '🚕', '🚌', '🚓', '🚕', '🚒', '🚑', '🚐', '🛺', '🏍️', '🏎️', '🚛', '🚚', '🛻'][Math.floor(Math.random() * 3)];
                 }
             }
 
