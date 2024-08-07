@@ -84,7 +84,7 @@
         class Player {
             constructor() {
                 this.x = 80;
-                this.y = canvas.height - 50;
+                this.y = canvas.height - 70; // Lowered the player
                 this.width = 40;
                 this.height = 40;
                 this.velY = 0;
@@ -96,19 +96,22 @@
                 this.frameTimer = 0;
                 this.hasPowerUp = false;
                 this.powerUpTimer = 0;
+                this.powerUpType = '';
             }
 
             draw() {
                 ctx.font = '40px Arial';
                 ctx.save();
                 ctx.scale(-1, 1);
-                ctx.fillText('🦖', -this.x - this.width, this.y);
+                ctx.fillText('🦖', -this.x - this.width, this.y + this.height);
                 ctx.restore();
 
                 if (this.hasPowerUp) {
                     ctx.font = '20px Arial';
-                    ctx.fillStyle = 'yellow';
-                    ctx.fillText('🔫', this.x + this.width, this.y);
+                    ctx.save();
+                    ctx.scale(-1, 1);
+                    ctx.fillText(this.powerUpType === 'gun' ? '🔫' : '🔥', -this.x - this.width - 20, this.y + this.height - 10);
+                    ctx.restore();
                 }
             }
 
@@ -116,8 +119,8 @@
                 this.velY += GRAVITY;
                 this.y += this.velY;
 
-                if (this.y + this.height > canvas.height) {
-                    this.y = canvas.height - this.height;
+                if (this.y + this.height > canvas.height - 20) {
+                    this.y = canvas.height - this.height - 20;
                     this.jumping = false;
                     this.doubleJumping = false;
                 }
@@ -133,6 +136,11 @@
                     if (this.powerUpTimer >= 1800) { // 30 seconds (60 fps * 30)
                         this.hasPowerUp = false;
                         this.powerUpTimer = 0;
+                        this.powerUpType = '';
+                    }
+
+                    if (this.powerUpType === 'fire') {
+                        this.shootFire();
                     }
                 }
             }
@@ -150,8 +158,14 @@
             }
 
             shootLaser() {
-                if (this.hasPowerUp) {
-                    lasers.push(new Laser(this.x + this.width, this.y + this.height / 2));
+                if (this.hasPowerUp && this.powerUpType === 'gun') {
+                    lasers.push(new Laser(this.x, this.y + this.height / 2));
+                }
+            }
+
+            shootFire() {
+                if (this.hasPowerUp && this.powerUpType === 'fire' && Math.random() < 0.1) {
+                    lasers.push(new Fire(this.x, this.y + this.height / 2));
                 }
             }
         }
@@ -164,10 +178,11 @@
                 this.speed = 5;
                 
                 if (isFlying) {
-                    this.y = Math.random() * (canvas.height - 150);
+                    const maxHeight = canvas.height - 150 - player.height * 2; // Limit the maximum height
+                    this.y = Math.random() * maxHeight;
                     this.emoji = ['🛸', '🦅', '🚁'][Math.floor(Math.random() * 3)];
                 } else {
-                    this.y = canvas.height - 70;
+                    this.y = canvas.height - 90; // Same base height as the player
                     this.emoji = ['🚗', '🚙', '🚕'][Math.floor(Math.random() * 3)];
                 }
             }
@@ -189,7 +204,7 @@
                 this.width = 30;
                 this.height = 30;
                 this.speed = 3;
-                this.emoji = '🔫';
+                this.emoji = Math.random() < 0.5 ? '🔫' : '🔥';
             }
 
             draw() {
@@ -206,14 +221,33 @@
             constructor(x, y) {
                 this.x = x;
                 this.y = y;
-                this.width = 20;
+                this.width = 10;
                 this.height = 5;
                 this.speed = 10;
             }
 
             draw() {
-                ctx.fillStyle = 'red';
+                ctx.fillStyle = 'blue';
                 ctx.fillRect(this.x, this.y, this.width, this.height);
+            }
+
+            update() {
+                this.x += this.speed;
+            }
+        }
+
+        class Fire {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.width = 20;
+                this.height = 20;
+                this.speed = 8;
+            }
+
+            draw() {
+                ctx.font = '20px Arial';
+                ctx.fillText('🔥', this.x, this.y);
             }
 
             update() {
@@ -336,6 +370,7 @@
                 ) {
                     player.hasPowerUp = true;
                     player.powerUpTimer = 0;
+                    player.powerUpType = powerUp.emoji === '🔫' ? 'gun' : 'fire';
                     powerUps.splice(index, 1);
                 }
             });
@@ -417,7 +452,7 @@
                 spawnPowerUp();
                 checkCollision();
 
-                if (player.hasPowerUp) {
+                if (player.hasPowerUp && player.powerUpType === 'gun') {
                     player.shootLaser();
                 }
 
@@ -466,12 +501,13 @@
 
         function restartGame() {
             player.x = 80;
-            player.y = canvas.height - 50;
+            player.y = canvas.height - 70; // Adjusted to match the new player position
             player.velY = 0;
             player.jumping = false;
             player.doubleJumping = false;
             player.hasPowerUp = false;
             player.powerUpTimer = 0;
+            player.powerUpType = '';
             obstacles = [];
             particles = [];
             powerUps = [];
