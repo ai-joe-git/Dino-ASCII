@@ -101,7 +101,7 @@
             }
 
             draw() {
-                ctx.font = '40px Arial';
+                ctx.font = '60px Arial';
                 ctx.save();
                 ctx.scale(-1, 1);
                 ctx.fillText('🦖', -this.x - this.width, this.y + this.height);
@@ -190,7 +190,7 @@
                     this.y = Math.random() * maxHeight + 100;
                     this.emoji = ['🛸', '🦅', '🚁'][Math.floor(Math.random() * 3)];
                 } else {
-                    this.y = canvas.height - 50 - this.height; // Same level as the player
+                    this.y = canvas.height - 70 - this.height; // Same level as the player
                     this.emoji = ['🚗', '🚙', '🚕'][Math.floor(Math.random() * 3)];
                 }
             }
