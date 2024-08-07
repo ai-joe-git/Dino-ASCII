@@ -31,11 +31,11 @@
         const background = {
             layers: [
                 { emoji: '☁️', size: 40, speed: 0.1, positions: [] },
-                { emoji: '🏭', size: 50, speed: 0.5, positions: [] },
-                { emoji: '🏢', size: 40, speed: 1, positions: [] },
+                { emoji: '🏛️', size: 50, speed: 0.5, positions: [] },
+                { emoji: '🌳', size: 40, speed: 1, positions: [] },
                 { emoji: '🏗️', size: 30, speed: 1.5, positions: [] }
             ],
-            landscapes: ['🏙️', '🌆', '🌃', '🌇', '🌉', '🏙️'],
+            landscapes: ['🗼', '🌵', '🏭', '🏗️', '🏢', '🏔️'],
             currentLandscape: 0,
             weatherEffects: ['☁️', '☁️', '☁️', '☁️'],
             currentWeather: 0,
@@ -101,7 +101,7 @@
             }
 
             draw() {
-                ctx.font = '60px Arial';
+                ctx.font = '80px Arial';
                 ctx.save();
                 ctx.scale(-1, 1);
                 ctx.fillText('🦖', -this.x - this.width, this.y + this.height);
