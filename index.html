@@ -461,9 +461,13 @@
                         laser.y < obstacle.y + obstacle.height &&
                         laser.y + laser.radius * 2 > obstacle.y
                     ) {
-                        obstacles.splice(obstacleIndex, 1);
+                        if (laser instanceof Fire) {
+                            obstacle.isBurning = true;
+                        } else {
+                            obstacles.splice(obstacleIndex, 1);
+                            lasers.splice(laserIndex, 1);
+                        }
                         createParticles(obstacle.x, obstacle.y);
-                        lasers.splice(laserIndex, 1);
                         score += 10;
                     }
                 });
@@ -495,10 +499,10 @@
                 player.update();
                 player.draw();
 
-                obstacles = obstacles.filter((obstacle, index) => {
+                obstacles = obstacles.filter((obstacle) => {
                     obstacle.update();
                     obstacle.draw();
-                    return !(obstacle.x + obstacle.width < 0 || obstacle.isBurning && obstacle.burnTimer >= 60);
+                    return !(obstacle.x + obstacle.width < 0 || (obstacle.isBurning && obstacle.burnTimer >= 60));
                 });
 
                 powerUps.forEach((powerUp, index) => {
