@@ -114,26 +114,6 @@
                     ctx.fillText('🔫', -this.x - this.width - 20, this.y + this.height - 10);
                     ctx.restore();
                 }
-
-                if (this.hasPowerUp && this.powerUpType === 'fire') {
-                    this.drawFireBreath();
-                }
-            }
-
-            drawFireBreath() {
-                const fireParticles = 20;
-                const maxDistance = 100;
-                ctx.fillStyle = 'orange';
-                for (let i = 0; i < fireParticles; i++) {
-                    const distance = Math.random() * maxDistance;
-                    const angle = Math.random() * Math.PI / 4 - Math.PI / 8;
-                    const x = this.x + this.width + Math.cos(angle) * distance;
-                    const y = this.y + this.height / 2 + Math.sin(angle) * distance;
-                    const size = Math.random() * 5 + 2;
-                    ctx.beginPath();
-                    ctx.arc(x, y, size, 0, Math.PI * 2);
-                    ctx.fill();
-                }
             }
 
             update() {
@@ -160,10 +140,6 @@
                         this.powerUpTimer = 0;
                         this.powerUpType = '';
                     }
-
-                    if (this.powerUpType === 'fire') {
-                        this.shootFire();
-                    }
                 }
             }
 
@@ -184,16 +160,10 @@
             }
 
             shootLaser() {
-                if (this.hasPowerUp && this.powerUpType === 'gun') {
+                if (this.hasPowerUp) {
                     for (let i = 0; i < 5; i++) {
-                        lasers.push(new Laser(this.x + this.width, this.y + this.height / 2));
+                        lasers.push(new Laser(this.x + this.width, this.y + this.height / 2, this.powerUpType));
                     }
-                }
-            }
-
-            shootFire() {
-                if (this.hasPowerUp && this.powerUpType === 'fire' && Math.random() < 0.1) {
-                    lasers.push(new Fire(this.x + this.width, this.y + this.height / 2));
                 }
             }
         }
@@ -274,16 +244,17 @@
         }
 
         class Laser {
-            constructor(x, y) {
+            constructor(x, y, type) {
                 this.x = x;
                 this.y = y;
                 this.radius = 3;
                 this.speed = 10;
                 this.angle = Math.random() * Math.PI / 6 - Math.PI / 12;
+                this.type = type;
             }
 
             draw() {
-                ctx.fillStyle = 'blue';
+                ctx.fillStyle = this.type === 'gun' ? 'blue' : 'yellow';
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
                 ctx.fill();
@@ -292,42 +263,6 @@
             update() {
                 this.x += this.speed * Math.cos(this.angle);
                 this.y += this.speed * Math.sin(this.angle);
-            }
-        }
-
-        class Fire {
-            constructor(x, y) {
-                this.x = x;
-                this.y = y;
-                this.width = 20;
-                this.height = 20;
-                this.speed = 8;
-                this.particles = [];
-                for (let i = 0; i < 30; i++) {
-                    this.particles.push({
-                        x: 0,
-                        y: 0,
-                        speed: Math.random() * 3 + 1,
-                        angle: Math.random() * Math.PI / 2 - Math.PI / 4
-                    });
-                }
-            }
-
-            draw() {
-                ctx.fillStyle = 'orange';
-                this.particles.forEach(particle => {
-                    ctx.beginPath();
-                    ctx.arc(this.x + particle.x, this.y + particle.y, 2, 0, Math.PI * 2);
-                    ctx.fill();
-                });
-            }
-
-            update() {
-                this.x += this.speed;
-                this.particles.forEach(particle => {
-                    particle.x += particle.speed * Math.cos(particle.angle);
-                    particle.y += particle.speed * Math.sin(particle.angle);
-                });
             }
         }
 
@@ -461,12 +396,12 @@
                         laser.y < obstacle.y + obstacle.height &&
                         laser.y + laser.radius * 2 > obstacle.y
                     ) {
-                        if (laser instanceof Fire) {
+                        if (laser.type === 'fire') {
                             obstacle.isBurning = true;
                         } else {
                             obstacles.splice(obstacleIndex, 1);
-                            lasers.splice(laserIndex, 1);
                         }
+                        lasers.splice(laserIndex, 1);
                         createParticles(obstacle.x, obstacle.y);
                         score += 10;
                     }
@@ -533,7 +468,7 @@
                 spawnPowerUp();
                 checkCollision();
 
-                if (player.hasPowerUp && player.powerUpType === 'gun') {
+                if (player.hasPowerUp) {
                     player.shootLaser();
                 }
 
