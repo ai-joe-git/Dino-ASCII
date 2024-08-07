@@ -186,11 +186,11 @@
                 this.speed = 5;
                 
                 if (isFlying) {
-                    const maxHeight = canvas.height - 150 - player.height * 2;
+                    const maxHeight = canvas.height - 100 - player.height * 2;
                     this.y = Math.random() * maxHeight + 100;
                     this.emoji = ['🛸', '🦅', '🚁'][Math.floor(Math.random() * 3)];
                 } else {
-                    this.y = canvas.height - 35 - this.height; // Same level as the player
+                    this.y = canvas.height - 5 - this.height; // Same level as the player
                     this.emoji = ['🚗', '🚙', '🚕'][Math.floor(Math.random() * 3)];
                 }
             }
