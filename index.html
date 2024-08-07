@@ -499,10 +499,12 @@
                 player.update();
                 player.draw();
 
-                obstacles = obstacles.filter((obstacle, index) => {
-                    obstacle.update();
-                    obstacle.draw();
-                    return !(obstacle.x + obstacle.width < 0 || obstacle.isBurning && obstacle.burnTimer >= 60);
+                obstacles = obstacles.filter((obstacle) => {
+                    const remove = obstacle.update();
+                    if (!remove) {
+                        obstacle.draw();
+                    }
+                    return !remove && obstacle.x + obstacle.width > 0;
                 });
 
                 powerUps.forEach((powerUp, index) => {
