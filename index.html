@@ -35,7 +35,7 @@
                 { emoji: '🌳', size: 40, speed: 1, positions: [] },
                 { emoji: '🚧', size: 30, speed: 1.5, positions: [] }
             ],
-            landscapes: ['🗼', '🏯', '🏦', '🏗️', '🏢', '⛩️'],
+            landscapes: ['🗼', '🏯', '⛰️', '🏔️', '🏢', '⛩️',' 🏟️'],
             currentLandscape: 0,
             weatherEffects: ['☁️', '☁️', '☁️', '☁️'],
             currentWeather: 0,
@@ -101,7 +101,7 @@
             }
 
             draw() {
-                ctx.font = '80px Arial';
+                ctx.font = '65px Arial';
                 ctx.save();
                 ctx.scale(-1, 1);
                 ctx.fillText('🦖', -this.x - this.width, this.y + this.height);
@@ -320,7 +320,7 @@
 
             ctx.font = `200px Arial`;
             for (let i = -200; i < canvas.width; i += 200) {
-                ctx.fillText(background.landscapes[background.currentLandscape], i, canvas.height - 120); // Adjusted y-coordinate here
+                ctx.fillText(background.landscapes[background.currentLandscape], i, canvas.height - 130); // Adjusted y-coordinate here
             }
 
             ctx.fillStyle = '#A9A9A9';
